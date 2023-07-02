@@ -7,7 +7,6 @@ class UserController {
       const userData = await userService.registration(email, password);
       const maxAge = 30 * 24 * 60 * 60 * 1000;
       response.cookie('refreshToken', userData.refreshToken, { maxAge, httpOnly: true });
-
       return response.json(userData);
     } catch (e) {
       console.log(e);
@@ -32,9 +31,11 @@ class UserController {
 
   async activate(request, response, next) {
     try {
-
+      const activationLink = request.params.link;
+      await userService.activate(activationLink);
+      return response.redirect(process.env.CLIENT_URL);
     } catch (e) {
-
+      console.log(e);
     }
   }
 
